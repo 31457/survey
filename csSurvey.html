@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>CS department survey psge</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+ .require::after {
+        content: ' *';
+        color: red;
+      }
+.green{
+color:#006633;
+}
+.boxing{
+border: 5px solid #006633;
+  padding: 10px;
+  box-shadow: 5px 10px #888888;
+
+}
+.grey{
+background-color:lightgray;
+}
+</style>
+</head>
+<!-- body -->
+<body class="grey">
+<!-- Form -->
+<div class="container">
+  <h1 class="green boxing">CS department survey page</h1>
+  <form class="form-horizontal py-2" action="/action_page.php" method="get" autocomplete="on">
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="email" >Username:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="username" placeholder="" name="email" autofocus required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="pwd">Street address:</label>
+      <div class="col-sm-10">          
+        <input type="text" class="form-control" id="add"  name="add" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="city">City:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="city"  name="city" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="state">State:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="state"  name="state" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="zipcode">Zipcode:</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="zipcode"  name="zipcode" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 " for="email">Telephone number:</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="phone" name="phone">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="email">Email:</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" id="email" placeholder="example@gmail.com" name="email" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="url">URL:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="" placeholder="xyz.com" name="url" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2 require" for="dateOfSurvey">Date of survey:</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="dateOfSurvey" placeholder="Enter date" name="dateOfSurvey" required>
+      </div>
+    </div>
+    
+    <div class="form-group"> 
+    <label class="control-label col-sm-2 " for="dateOfSurvey">What did you like most about the campus?</label>
+      <div class=" col-sm-10">
+        <div class="checkbox" required>
+          <label><input type="checkbox" name="remember" >Students </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" name="remember"> Location</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" name="remember">Campus </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" name="remember">Atmosphere </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" name="remember">Dorm rooms </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" name="remember">Sports </label>
+        </div>
+      </div>
+    </div>
+     <div class="form-group"> 
+    <label class="control-label col-sm-2 require" for="dateOfSurvey">How did you become interested in the university?</label>
+      <div class=" col-sm-10">
+        <div class="radio">
+          <label><input type="radio" name="remember" required>Friends </label>
+        </div>
+         <div class="radio">
+          <label><input type="radio" name="remember">Television </label>
+        </div>
+         <div class="radio">
+          <label><input type="radio" name="remember">Internet </label>
+        </div>
+         <div class="radio">
+          <label><input type="radio" name="remember">Other </label>
+        </div>
+        
+        
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Comments:</label>
+      <div class="col-sm-10">
+        <input type="textarea" class="form-control" id="comments" placeholder="Enter comments" name="comments">
+      </div>
+    </div>
+
+ <div class="form-group">
+ <label class="control-label col-sm-2 require" >Graduation year :</label>
+      <div class="">
+
+<select name="year" id="year" required>
+  <option value="January">January</option>
+  <option value="February">February</option>
+  <option value="March">March</option>
+  <option value="April">April</option>
+<option value="May">May</option>
+
+<option value="June">June</option>
+
+<option value="July">July</option>
+
+<option value="August">August</option>
+
+<option value="September">September</option>
+
+<option value="October">October</option>
+
+<option value="November">November</option>
+
+<option value="December">December</option>
+
+
+
+</select>
+ <div class="form-group">
+      <label class="control-label col-sm-2 require" for="email" required>Year:</label>
+      <div class="col-sm-1">
+        <input type="text" class="form-control" id="" placeholder="" name="" required>
+      </div>
+ </div>
+    </div>
+
+<div class="form-group">
+ <label class="control-label col-sm-2 require" >How likely are you to recommend this school to your friends?</label>
+      <div class="">
+
+<select name="year" id="year" required>
+  <option value="January">Very likely</option>
+  <option value="February">likely</option>
+  <option value="March">Un likely</option>
+
+
+</select>
+
+
+   
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <input type="submit" ></input>
+      </div>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>
