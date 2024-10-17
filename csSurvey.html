@@ -1,199 +1,483 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>CS department survey psge</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Yogitha Yadla">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<style>
- .require::after {
-        content: ' *';
-        color: red;
-      }
-.green{
-color:#006633;
-}
-.boxing{
-border: 5px solid #006633;
-  padding: 10px;
-  box-shadow: 5px 10px #888888;
+  <style>
+    .overlay {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      transition: opacity 0.5s;
+      visibility: hidden;
+      opacity: 0;
+    }
 
+    .overlay:target {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .require::after {
+      content: ' *';
+      color: red;
+    }
+
+    .green {
+      color: #006633;
+    }
+
+    .boxing {
+      border: 5px solid #006633;
+      padding: 10px;
+      box-shadow: 5px 10px #888888;
+
+    }
+
+    .grey {
+      background-color: lightgray;
+    }
+  </style>
+  <script>
+
+
+    function validateAlphabets(inputName) {
+      const regex = /^[A-Za-z]+$/;
+
+      // Test the input against the regular expression
+      if (regex.test(inputName)) {
+        return true; // Valid input (only alphabets)
+      } else {
+        return false; // Invalid input (contains other characters)
+      }
+    }
+
+    function validateForm() {
+      inputName = document.forms["surveyForm"]["username"].value;
+      if (validateAlphabets(inputName)) {
+        alert("Valid input: Only alphabets!");
+      } else {
+        alert("Invalid input: Please enter only alphabets.");
+      }
+    }
+    function fetchCityState() {
+  const zipCode = document.getElementById('zipcode').value.trim();
+
+  // Make sure zip code has 5 digits
+  if (zipCode.length !== 5 || isNaN(zipCode)) {
+    alert("Invalid zip code");
+    return;
+  }
+
+  // Make an Ajax call to fetch the zip code JSON file
+  $.ajax({
+    url: 'zipcodes.json', // Make sure this path is correct
+    dataType: 'json',
+    success: function (data) {
+      const zipcodes = data.zipcodes;
+      let found = false;
+
+      // Iterate over the zip codes and find a match
+      for (let i = 0; i < zipcodes.length; i++) {
+        if (zipcodes[i].zip === zipCode) {
+          document.getElementById('city').textContent = zipcodes[i].city;
+          document.getElementById('state').textContent = zipcodes[i].state;
+          found = true;
+          break;
+        }
+      }
+
+      // If zip code is not found
+      if (!found) {
+        alert("Invalid zip code");
+        document.getElementById('city').textContent = "";
+        document.getElementById('state').textContent = "";
+      }
+    },
+    error: function () {
+      alert('Error loading zip code data');
+    }
+  });
 }
-.grey{
-background-color:lightgray;
+// Function to get cookie value by name
+function getCookie(name) {
+  let cookieArr = document.cookie.split(";");
+
+  for (let i = 0; i < cookieArr.length; i++) {
+    let cookiePair = cookieArr[i].split("=");
+
+    if (name === cookiePair[0].trim()) {
+      return decodeURIComponent(cookiePair[1]);
+    }
+  }
+
+  return null;
 }
-</style>
+
+// Function to set the cookie
+function setCookie(name, value, days) {
+  let date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  let expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+}
+
+// Function to display a greeting based on the time of day
+function getGreeting() {
+  let hours = new Date().getHours();
+  if (hours >= 5 && hours < 12) {
+    return "Good Morning";
+  } else if (hours >= 12 && hours < 18) {
+    return "Good Afternoon";
+  } else {
+    return "Good Evening";
+  }
+}
+
+// Function to set the user's name and display the greeting
+function setUserName() {
+  let userName = document.getElementById('name').value;
+  if (userName) {
+    setCookie("username", userName, 7); // Set the cookie for 7 days
+    displayGreeting();
+  }
+}
+
+// Function to prompt for user's name if not found in the cookie
+function promptForName() {
+  document.getElementById('greeting').innerText = '';
+  document.getElementById('nameInput').style.display = 'block';
+  document.getElementById('changeUser').style.display = 'none';
+}
+
+// Function to display the greeting or prompt for the user's name
+function displayGreeting() {
+  let userName = getCookie("username");
+
+  if (userName) {
+    let greetingMessage = getGreeting() + ", " + userName + "! Welcome to SWE642 Survey";
+    document.getElementById('greeting').innerText = greetingMessage;
+    document.getElementById('nameInput').style.display = 'none';
+    document.getElementById('changeUser').style.display = 'block';
+  } else {
+    promptForName();
+  }
+}
+
+// Run this function when the page loads
+window.onload = function() {
+  displayGreeting();
+};
+
+
+
+
+  </script>
 </head>
 <!-- body -->
+<!-- Author: Yogitha Yadla -->
 <body class="grey">
-<!-- Form -->
-<div class="container">
-  <h1 class="green boxing">CS department survey page</h1>
-  <form class="form-horizontal py-2" action="/action_page.php" method="get" autocomplete="on">
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="email" >Username:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="username" placeholder="" name="email" autofocus required>
+  <!-- Form -->
+  <div class="container">
+    <h1 class="green boxing">CS department survey page</h1>
+    <h1 id="greeting"></h1>
+  <div id="nameInput" style="display: none;">
+    <label for="name">Enter your name: </label>
+    <input type="text" id="name">
+    <button onclick="setUserName()">Submit</button>
+  </div>
+  <a id="changeUser" href="#" style="display: none;" onclick="promptForName()">Not you? Click here to change the user.</a>
+    <form class="form-horizontal py-2" method="get" autocomplete="on" id="surveyForm" name="surveyForm">
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="username">Username:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="username" placeholder="" name="username" autofocus required>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="pwd">Street address:</label>
-      <div class="col-sm-10">          
-        <input type="text" class="form-control" id="add"  name="add" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="add">Street address:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="add" name="add" required>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="city">City:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="city"  name="city" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="zipcode">Zipcode:</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" id="zipcode" name="zipcode" onblur="fetchCityState()" required>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="state">State:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="state"  name="state" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="city">City:</label>
+        <div class="col-sm-10">
+          <span id="city" class="form-control"></span>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="zipcode">Zipcode:</label>
-      <div class="col-sm-10">
-        <input type="number" class="form-control" id="zipcode"  name="zipcode" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="state">State:</label>
+        <div class="col-sm-10">
+          <span id="state" class="form-control"></span>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 " for="email">Telephone number:</label>
-      <div class="col-sm-10">
-        <input type="number" class="form-control" id="phone" name="phone">
+     
+      <div class="form-group">
+        <label class="control-label col-sm-2 " for="phone">Telephone number:</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" id="phone" name="phone">
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="email">Email:</label>
-      <div class="col-sm-10">
-        <input type="email" class="form-control" id="email" placeholder="example@gmail.com" name="email" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="email">Email:</label>
+        <div class="col-sm-10">
+          <input type="email" class="form-control" id="email" placeholder="example@gmail.com" name="email" required>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="url">URL:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="" placeholder="xyz.com" name="url" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="url">URL:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="url" placeholder="xyz.com" name="url" required>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2 require" for="dateOfSurvey">Date of survey:</label>
-      <div class="col-sm-10">
-        <input type="date" class="form-control" id="dateOfSurvey" placeholder="Enter date" name="dateOfSurvey" required>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="dateOfSurvey">Date of survey:</label>
+        <div class="col-sm-10">
+          <input type="date" class="form-control" id="dateOfSurvey" placeholder="Enter date" name="dateOfSurvey"
+            required>
+        </div>
       </div>
-    </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2 " for="likeMost">What did you like most about the campus?</label>
+        <div class=" col-sm-10">
+          <div class="checkbox" required>
+            <label><input type="checkbox" name="likemost">Students </label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" name="likemost"> Location</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" name="likemost">Campus </label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" name="likemost">Atmosphere </label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" name="likemost">Dorm rooms </label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" name="likemost">Sports </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="interest">How did you become interested in the
+          university?</label>
+        <div class=" col-sm-10">
+          <div class="radio">
+            <label><input type="radio" name="Friends" required>Friends </label>
+          </div>
+          <div class="radio">
+            <label><input type="radio" name="Friends">Television </label>
+          </div>
+          <div class="radio">
+            <label><input type="radio" name="Friends">Internet </label>
+          </div>
+          <div class="radio">
+            <label><input type="radio" name="Friends">Other </label>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2" for="comments">Comments:</label>
+        <div class="col-sm-10">
+          <input type="textarea" class="form-control" id="comments" placeholder="Enter comments" name="comments">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label col-sm-2 require" for="Graduation">Graduation year :</label>
+        <div class="col-sm-10">
+
+          <select name="year" id="year" required>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+
+            <option value="June">June</option>
+
+            <option value="July">July</option>
+
+            <option value="August">August</option>
+
+            <option value="September">September</option>
+
+            <option value="October">October</option>
+
+            <option value="November">November</option>
+
+            <option value="December">December</option>
+
+
+
+          </select>
+          <div class="form-group">
+            <label class="control-label col-sm-2 require" for="year" required>Year:</label>
+            <div class="col-sm-1">
+              <input type="text" class="form-control" id="year" placeholder="" name="year" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-2 require">How likely are you to recommend this school to your
+            friends?</label>
+          <div class="col-sm-10">
+
+            <select name="year" id="year" required>
+              <option value="Very likely">Very likely</option>
+              <option value="likely">likely</option>
+              <option value="Un likely">Un likely</option>
+
+
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2 " for="data">Data:</label>
+          <input type="text" id="data" name="data" placeholder="e.g. 10, 20, 30, ..."><br><br>
+          <p id="error-message" class="error" style="color: red; "></p>
+          <div class="output  ">
+            <label class="control-label col-sm-2 " for="average">Average:</label>
+            <input type="text" id="average" name="average" readonly><br><br>
+
+            <label class="control-label col-sm-2" for="maximum">Maximum:</label>
+            <input type="text" id="maximum" name="maximum" readonly><br><br>
+
+            <p id="error-message" class="error"></p>
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" value="Submit"></input>
+            <input type="reset" value="Reset"></input>
+          </div>
+        </div>
+    </form>
     
-    <div class="form-group"> 
-    <label class="control-label col-sm-2 " for="dateOfSurvey">What did you like most about the campus?</label>
-      <div class=" col-sm-10">
-        <div class="checkbox" required>
-          <label><input type="checkbox" name="remember" >Students </label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="remember"> Location</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="remember">Campus </label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="remember">Atmosphere </label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="remember">Dorm rooms </label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="remember">Sports </label>
-        </div>
-      </div>
-    </div>
-     <div class="form-group"> 
-    <label class="control-label col-sm-2 require" for="dateOfSurvey">How did you become interested in the university?</label>
-      <div class=" col-sm-10">
-        <div class="radio">
-          <label><input type="radio" name="remember" required>Friends </label>
-        </div>
-         <div class="radio">
-          <label><input type="radio" name="remember">Television </label>
-        </div>
-         <div class="radio">
-          <label><input type="radio" name="remember">Internet </label>
-        </div>
-         <div class="radio">
-          <label><input type="radio" name="remember">Other </label>
-        </div>
-        
-        
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="email">Comments:</label>
-      <div class="col-sm-10">
-        <input type="textarea" class="form-control" id="comments" placeholder="Enter comments" name="comments">
-      </div>
-    </div>
+  </div>
+  <script>
+    document.getElementById('data').addEventListener('blur', calculateAverageAndMaximum);
 
- <div class="form-group">
- <label class="control-label col-sm-2 require" >Graduation year :</label>
-      <div class="">
+    function calculateAverageAndMaximum() {
+      const dataField = document.getElementById('data').value.trim();
 
-<select name="year" id="year" required>
-  <option value="January">January</option>
-  <option value="February">February</option>
-  <option value="March">March</option>
-  <option value="April">April</option>
-<option value="May">May</option>
+      const errorMessage = document.getElementById('error-message');
+      errorMessage.textContent = ''; // Clear any previous errors
 
-<option value="June">June</option>
+      // Split input into an array of numbers
+      const numbers = dataField.split(',').map(num => num.trim());
 
-<option value="July">July</option>
+      // Check if there are exactly 10 values
+      if (numbers.length !== 10) {
+        errorMessage.textContent = 'Please enter exactly 10 comma-separated values.';
+        clearOutputs();
+        return;
+      }
 
-<option value="August">August</option>
+      // Convert the values to integers and validate that they are within the range 1-100
+      const validNumbers = numbers.map(Number).filter(num => num >= 1 && num <= 100);
 
-<option value="September">September</option>
+      if (validNumbers.length !== 10) {
+        errorMessage.textContent = 'All values must be between 1 and 100.';
+        clearOutputs();
+        return;
+      }
 
-<option value="October">October</option>
+      // Calculate the average and maximum
+      const sum = validNumbers.reduce((acc, num) => acc + num, 0);
+      const average = (sum / validNumbers.length).toFixed(2);  // Rounded to 2 decimal places
+      const maximum = Math.max(...validNumbers);
 
-<option value="November">November</option>
+      // Display the results
+      document.getElementById('average').value = average;
+      document.getElementById('maximum').value = maximum;
+    }
 
-<option value="December">December</option>
+    function clearOutputs() {
+      document.getElementById('average').value = '';
+      document.getElementById('maximum').value = '';
+    }
+
+    document.getElementById('surveyForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent form submission for demo purposes
+      const regex = /^[A-Za-z\s]+$/;
+      const alphanumericPattern = /^[a-zA-Z\s]+$/;
+      const alphanumericWithHyphenPattern = /^[a-zA-Z0-9-\s]+$/;
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 
+      // Fetch form fields
+      // const inputName = document.forms["surveyForm"]["username"].value;
+      let inputName = document.getElementById('username').value;
+      let inputAdd = document.getElementById('add').value;
+      let inputCity = document.getElementById('city').value;
+      let inputState = document.getElementById('state').value;
+      const checkboxes = document.querySelectorAll('input[name="likemost"]:checked');
+      const contactMethod = document.querySelector('input[name="Friends"]:checked');
+      const email = document.getElementById('email').value.trim();
 
-</select>
- <div class="form-group">
-      <label class="control-label col-sm-2 require" for="email" required>Year:</label>
-      <div class="col-sm-1">
-        <input type="text" class="form-control" id="" placeholder="" name="" required>
-      </div>
- </div>
-    </div>
-
-<div class="form-group">
- <label class="control-label col-sm-2 require" >How likely are you to recommend this school to your friends?</label>
-      <div class="">
-
-<select name="year" id="year" required>
-  <option value="January">Very likely</option>
-  <option value="February">likely</option>
-  <option value="March">Un likely</option>
+           
 
 
-</select>
+      if (!regex.test(inputName)) {
+        alert("Invalid input for username: Please enter only alphabets.");
+        document.getElementById('username').value = "";
+      }
+      if (!alphanumericWithHyphenPattern.test(inputAdd)) {
+        alert("Invalid input for address: Please enter only alphabets or numerics.");
+        document.getElementById('add').value = "";
+      }
+      if (!alphanumericPattern.test(inputCity)) {
+        alert("Invalid input for city: Please enter only alphabets or numerics.");
+        document.getElementById('city').value = "";
+      }
+      if (!alphanumericPattern.test(inputState)) {
+        alert("Invalid input state for: Please enter only alphabets or numerics.");
+        document.getElementById('state').value = "";
+      }
+      if (checkboxes.length < 2) {
+                alert('Please select at least two options for "What did you like most about the campus?"');
+                return;
+            }
+      if (!contactMethod) {
+                alert('Please select a contact method.');
+                return;
+            }
+       // Validate the email format
+       if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
 
-
-   
-    <div class="form-group">        
-      <div class="col-sm-offset-2 col-sm-10">
-        <input type="submit" ></input>
-      </div>
-    </div>
-  </form>
-</div>
+    })
+  </script>
 
 </body>
+
 </html>
